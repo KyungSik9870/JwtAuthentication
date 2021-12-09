@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountController {
 
 	private final SignUpFormValidator signUpFormValidator;
+	private final AccountService accountService;
 
 	@InitBinder
 	public void initBinding(WebDataBinder webDataBinder) {
@@ -34,6 +35,7 @@ public class AccountController {
 		if (errors.hasErrors()) {
 			return "account/sign-up";
 		}
-		return "";
+		accountService.saveNewAccount(signUpForm);
+		return "redirect:/";
 	}
 }

@@ -14,7 +14,7 @@ public class SignUpFormValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return false;
+		return clazz.isAssignableFrom(SignUpForm.class);
 	}
 
 	@Override
@@ -27,6 +27,5 @@ public class SignUpFormValidator implements Validator {
 			errors.rejectValue("nickname", "invalid nickname", new Object[] {signUpForm.getNickname()},
 				"이미 사용중인 닉네임입니다.");
 		}
-
 	}
 }
