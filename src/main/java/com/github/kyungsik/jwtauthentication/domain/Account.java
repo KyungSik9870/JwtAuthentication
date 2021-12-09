@@ -27,7 +27,7 @@ public class Account {
 
 	private String nickname;
 
-	private String email;
+	private String loginId;
 
 	private String password;
 
