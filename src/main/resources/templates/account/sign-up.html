@@ -22,15 +22,6 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <form th:action="@{/search/study}" class="form-inline" method="get">
-                    <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기"
-                           aria-label="Search"/>
-                </form>
-            </li>
-        </ul>
-
         <ul class="navbar-nav justify-content-end">
             <li class="nav-item">
                 <a class="nav-link" href="#" th:href="@{/login}">로그인</a>
@@ -51,18 +42,18 @@
               th:action="@{/sign-up}" th:object="${signUpForm}" method="post" novalidate>
             <div class="form-group">
                 <label for="nickname">닉네임</label>
-                <input id="nickname" type="text" th:field="*{nickname}" class="form-control"
+                <input id="nickname" type="text" th:field="*{loginId}" class="form-control"
                        placeholder="whiteship" aria-describedby="nicknameHelp" required minlength="3" maxlength="20">
                 <small id="nicknameHelp" class="form-text text-muted">
                     공백없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요. 가입후에 변경할 수 있습니다.
                 </small>
-                <small class="invalid-feedback">닉네임을 입력하세요.</small>
-                <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname
+                <small class="invalid-feedback">아이디을 입력하세요.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('loginId')}" th:errors="*{nickname}">Nickname
                     Error</small>
             </div>
 
             <div class="form-group">
-                <label for="loginId">이메일</label>
+                <label for="loginId">아이디</label>
                 <input id="loginId" type="text" th:field="*{loginId}" class="form-control"
                        placeholder="login Id" required>
                 <small class="invalid-feedback">아이디를 입력하세요.</small>
