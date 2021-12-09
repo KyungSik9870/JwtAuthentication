@@ -1,7 +1,9 @@
 package com.github.kyungsik.jwtauthentication.account;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,10 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.github.kyungsik.jwtauthentication.domain.Account;
 
@@ -77,7 +75,7 @@ class AccountControllerTest {
 
 	@DisplayName("회원가입 - 입력값 정상")
 	@ParameterizedTest
-	@CsvSource(value = {"testuser:nickname:12345678"}, delimiter = ':')
+	@CsvSource(value = {"alphabet:nickname:12345678"}, delimiter = ':')
 	void signUpForm_with_right_param(String loginId, String nickname, String password) throws Exception {
 		mockMvc.perform(
 			post("/sign-up")
