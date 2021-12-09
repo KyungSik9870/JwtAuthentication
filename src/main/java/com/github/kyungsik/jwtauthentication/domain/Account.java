@@ -52,6 +52,9 @@ public class Account implements UserDetails {
 	@NonNull
 	private Role role;
 
+	public Account(Long id, String loginId) {
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.authorities;
