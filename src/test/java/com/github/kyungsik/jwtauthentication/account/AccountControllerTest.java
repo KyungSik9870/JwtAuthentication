@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.github.kyungsik.jwtauthentication.domain.Account;
+import com.github.kyungsik.jwtauthentication.domain.Role;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,12 +38,14 @@ class AccountControllerTest {
 			.loginId("kyungsik")
 			.nickname("kyungsik")
 			.password("12345678")
+			.role(Role.ADMIN)
 			.build();
 		ACCOUNT_2 = Account.builder()
 			.id(2L)
 			.loginId("test")
 			.nickname("test")
 			.password("12345678")
+			.role(Role.ADMIN)
 			.build();
 		accountRepository.save(ACCOUNT_1);
 		accountRepository.save(ACCOUNT_2);
@@ -84,8 +87,8 @@ class AccountControllerTest {
 				.param("password", password)
 				.with(csrf())
 		)
-			.andExpect(status().is3xxRedirection())
-			.andExpect(view().name("redirect:/"));
+			.andExpect(status().isOk())
+			.andExpect(view().name("login"));
 
 		assertThat(accountRepository.existsByLoginId(loginId)).isTrue();
 	}

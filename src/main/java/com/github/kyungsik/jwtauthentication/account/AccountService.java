@@ -17,7 +17,8 @@ public class AccountService {
 	private final PasswordEncoder passwordEncoder;
 
 	public void saveNewAccount(SignUpForm signUpForm) {
-		Account newAccount = Account.builder()
+		Account newAccount = Account
+			.builder()
 			.loginId(signUpForm.getLoginId())
 			.password(passwordEncoder.encode(signUpForm.getPassword()))
 			.role(Role.ADMIN)
@@ -26,7 +27,7 @@ public class AccountService {
 	}
 
 	public Account findLoginAccount(LoginForm loginForm) throws ChangeSetPersister.NotFoundException {
-		return this.accountRepository.findByLoginId(loginForm.getLoginId())
+		return this.accountRepository.findByLoginId(loginForm.getUsername())
 			.orElseThrow(ChangeSetPersister.NotFoundException::new);
 	}
 }

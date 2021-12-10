@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class LoginForm {
-	private String username;
-	private String password;
+public class LoginResponse {
+	private String nickname;
+	private String accessToken;
 }
