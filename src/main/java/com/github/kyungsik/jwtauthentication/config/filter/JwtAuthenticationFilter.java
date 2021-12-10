@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.github.kyungsik.jwtauthentication.account.LoginResponse;
-import com.github.kyungsik.jwtauthentication.config.JwtTokenProvider;
+import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 

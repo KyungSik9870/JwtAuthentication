@@ -16,7 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.github.kyungsik.jwtauthentication.config.JwtTokenProvider;
+import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 

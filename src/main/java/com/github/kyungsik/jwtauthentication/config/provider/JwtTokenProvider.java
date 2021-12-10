@@ -1,4 +1,4 @@
-package com.github.kyungsik.jwtauthentication.config;
+package com.github.kyungsik.jwtauthentication.config.provider;
 
 import static com.github.kyungsik.jwtauthentication.config.SecurityConstants.*;
 
