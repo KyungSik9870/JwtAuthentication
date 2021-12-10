@@ -23,6 +23,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.github.kyungsik.jwtauthentication.account.LoginResponse;
 import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager authenticationManager;
@@ -37,7 +40,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		AuthenticationException {
 		String loginId = request.getParameter("loginId");
 		String password = request.getParameter("password");
-
+		log.info("Authentication Filter ID/PW check ");
 		return authenticationManager.authenticate(
 			new UsernamePasswordAuthenticationToken(
 				loginId,
@@ -49,7 +52,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 		Authentication authResult) throws IOException, ServletException {
 		JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
-
+		log.info("Authentication Filter success");
 		String username = ((User)authResult.getPrincipal()).getUsername();
 		String accessToken = jwtTokenProvider.generateAccessToken(username);
 

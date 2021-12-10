@@ -16,11 +16,16 @@ import org.springframework.stereotype.Component;
 import com.github.kyungsik.jwtauthentication.account.CustomUserDetailsService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
 	@Autowired
@@ -80,4 +85,23 @@ public class JwtTokenProvider {
 			.getBody();
 	}
 
+	public boolean validateToken(String header) {
+		String tokenValue = header.replace(TOKEN_PREFIX, "");
+		try {
+			Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY)).parseClaimsJws(tokenValue);
+			return true;
+		} catch (SignatureException exception) {
+			log.error("JWT signature does not match");
+			return false;
+		} catch (ExpiredJwtException exception) {
+			log.error("Token Expired");
+			return false;
+		} catch (JwtException exception) {
+			log.error("Token Tampered");
+			return false;
+		} catch (NullPointerException exception) {
+			log.error("Token is null");
+			return false;
+		}
+	}
 }

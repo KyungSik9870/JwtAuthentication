@@ -18,6 +18,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 	@Autowired
@@ -34,15 +37,19 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		ServletException {
 
 		String header = request.getHeader(HEADER_STRING);
+
+		log.info("Authorization Filter IN");
 		if (header == null || !header.startsWith(TOKEN_PREFIX)) {
 			chain.doFilter(request, response);
 			return;
 		}
 
-		UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		chain.doFilter(request, response);
+		if (jwtTokenProvider.validateToken(header)){
+			UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+			log.info("Issue Token");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			chain.doFilter(request, response);
+		}
 	}
 
 	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
