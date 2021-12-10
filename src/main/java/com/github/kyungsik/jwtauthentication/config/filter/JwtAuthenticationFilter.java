@@ -20,11 +20,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.kyungsik.jwtauthentication.account.LoginForm;
 import com.github.kyungsik.jwtauthentication.account.LoginResponse;
 import com.github.kyungsik.jwtauthentication.config.JwtTokenProvider;
-import com.github.kyungsik.jwtauthentication.domain.Account;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
