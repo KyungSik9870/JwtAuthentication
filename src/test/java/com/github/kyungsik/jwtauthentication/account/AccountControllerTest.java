@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kyungsik.jwtauthentication.domain.Account;
 import com.github.kyungsik.jwtauthentication.domain.Role;
 
@@ -138,7 +137,7 @@ class AccountControllerTest {
 
 		mockMvc.perform(
 			get("/account/1")
-			.header("Authorization", accessToken)
+				.header("Authorization", accessToken)
 		).andExpect(status().isOk());
 	}
 }
