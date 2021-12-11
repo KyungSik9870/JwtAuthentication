@@ -25,6 +25,13 @@ import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Authentication Filter(인증)
+ *
+ * 인증.
+ * id/pw 같은게 맞는지 확인해서
+ * A 사용자가 A 인 것을 확인(인증)
+ */
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 

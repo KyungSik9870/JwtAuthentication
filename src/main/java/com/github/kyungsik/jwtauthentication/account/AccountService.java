@@ -20,6 +20,7 @@ public class AccountService {
 		Account newAccount = Account
 			.builder()
 			.loginId(signUpForm.getLoginId())
+			.nickname(signUpForm.getNickname())
 			.password(passwordEncoder.encode(signUpForm.getPassword()))
 			.role(Role.ADMIN)
 			.build();
@@ -28,6 +29,11 @@ public class AccountService {
 
 	public Account findLoginAccount(LoginForm loginForm) throws ChangeSetPersister.NotFoundException {
 		return this.accountRepository.findByLoginId(loginForm.getUsername())
+			.orElseThrow(ChangeSetPersister.NotFoundException::new);
+	}
+
+	public Account findInfo(Long id) throws ChangeSetPersister.NotFoundException {
+		return this.accountRepository.findById(id)
 			.orElseThrow(ChangeSetPersister.NotFoundException::new);
 	}
 }

@@ -20,11 +20,16 @@ import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Authorization Filter (인가)
+ *
+ * 인증이 아닌 인가.
+ * 권한이 있는지 보고 보여줄지 말지 허락하는 단계
+ */
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
+	private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 
 	public JwtAuthorizationFilter(
 		AuthenticationManager authenticationManager) {
@@ -44,9 +49,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			return;
 		}
 
+		// TODO add try-catch phrase for expired token and issue refresh token
 		if (jwtTokenProvider.validateToken(header)){
 			UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
-			log.info("Issue Token");
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			chain.doFilter(request, response);
 		}

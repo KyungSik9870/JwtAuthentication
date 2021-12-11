@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kyungsik.jwtauthentication.domain.Account;
 import com.github.kyungsik.jwtauthentication.domain.Role;
 
@@ -28,6 +32,9 @@ class AccountControllerTest {
 	@Autowired
 	private AccountRepository accountRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	Account ACCOUNT_1;
 	Account ACCOUNT_2;
 
@@ -37,14 +44,14 @@ class AccountControllerTest {
 			.id(1L)
 			.loginId("kyungsik")
 			.nickname("kyungsik")
-			.password("12345678")
+			.password(passwordEncoder.encode("12345678"))
 			.role(Role.ADMIN)
 			.build();
 		ACCOUNT_2 = Account.builder()
 			.id(2L)
 			.loginId("test")
 			.nickname("test")
-			.password("12345678")
+			.password(passwordEncoder.encode("12345678"))
 			.role(Role.ADMIN)
 			.build();
 		accountRepository.save(ACCOUNT_1);
@@ -91,5 +98,47 @@ class AccountControllerTest {
 			.andExpect(view().name("login"));
 
 		assertThat(accountRepository.existsByLoginId(loginId)).isTrue();
+	}
+
+	@DisplayName("로그인 성공 테스트")
+	@Test
+	public void login_success() throws Exception {
+		String username = "kyungsik";
+		String password = "12345678";
+
+		MvcResult result = mockMvc.perform(
+			post("/account/login")
+				.param("loginId", username)
+				.param("password", password)
+		)
+			.andExpect(status().isOk()).andReturn();
+
+		String response = result.getResponse().getContentAsString();
+		JSONObject jsonObject = new JSONObject(response);
+		System.out.println(jsonObject);
+		assertThat(jsonObject.getString("accessToken")).isNotBlank();
+	}
+
+	@DisplayName("로그인 성공 후 내정보 조회 테스트")
+	@Test
+	void name() throws Exception {
+		String username = "kyungsik";
+		String password = "12345678";
+
+		MvcResult result = mockMvc.perform(
+			post("/account/login")
+				.param("loginId", username)
+				.param("password", password)
+		)
+			.andExpect(status().isOk()).andReturn();
+
+		String response = result.getResponse().getContentAsString();
+		JSONObject jsonObject = new JSONObject(response);
+		String accessToken = jsonObject.getString("accessToken");
+
+		mockMvc.perform(
+			get("/account/1")
+			.header("Authorization", accessToken)
+		).andExpect(status().isOk());
 	}
 }
