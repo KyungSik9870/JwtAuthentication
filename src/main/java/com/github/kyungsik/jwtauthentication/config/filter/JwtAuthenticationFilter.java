@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,12 +18,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.github.kyungsik.jwtauthentication.account.LoginResponse;
+import com.github.kyungsik.jwtauthentication.config.CookieUtil;
 import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
-import com.github.kyungsik.jwtauthentication.domain.Account;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager authenticationManager;
+	private final CookieUtil cookieUtil = new CookieUtil();
 
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
@@ -63,10 +64,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		log.info("Authentication Filter success");
 		String username = (authResult.getPrincipal()).toString();
 		String accessToken = jwtTokenProvider.generateAccessToken(username);
+		String refreshToken = jwtTokenProvider.generateRefreshToken(username);
 
 		LoginResponse login = new LoginResponse();
 		login.setNickname(username);
 		login.setAccessToken(TOKEN_PREFIX + accessToken);
+
+		// TODO Issue Refresh Token
+		Cookie accessTokenCookie = cookieUtil.create("accessToken", accessToken);
+		Cookie refreshTokenCookie = cookieUtil.create("refreshToken", refreshToken);
+
+		response.addCookie(accessTokenCookie);
+		response.addCookie(refreshTokenCookie);
 
 		MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
 		MediaType jsonMimeType = MediaType.APPLICATION_JSON;
