@@ -110,7 +110,9 @@ class AccountControllerTest {
 				.param("loginId", username)
 				.param("password", password)
 		)
-			.andExpect(status().isOk()).andReturn();
+			.andExpect(status().isOk())
+			.andExpect(cookie().exists("refreshToken"))
+			.andReturn();
 
 		String response = result.getResponse().getContentAsString();
 		JSONObject jsonObject = new JSONObject(response);
@@ -129,7 +131,9 @@ class AccountControllerTest {
 				.param("loginId", username)
 				.param("password", password)
 		)
-			.andExpect(status().isOk()).andReturn();
+			.andExpect(status().isOk())
+			.andExpect(cookie().exists("refreshToken"))
+			.andReturn();
 
 		String response = result.getResponse().getContentAsString();
 		JSONObject jsonObject = new JSONObject(response);
