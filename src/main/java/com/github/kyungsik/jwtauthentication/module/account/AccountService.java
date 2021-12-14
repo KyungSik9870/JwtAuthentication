@@ -32,4 +32,12 @@ public class AccountService {
 		return this.accountRepository.findById(id)
 			.orElseThrow(ChangeSetPersister.NotFoundException::new);
 	}
+
+	public Account findByUserName(String username) throws ChangeSetPersister.NotFoundException {
+		return this.accountRepository.findByLoginId(username).orElseThrow(ChangeSetPersister.NotFoundException::new);
+	}
+
+	public void saveAccount(Account account) {
+		this.accountRepository.save(account);
+	}
 }

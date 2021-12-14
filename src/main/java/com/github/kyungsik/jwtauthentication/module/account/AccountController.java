@@ -1,5 +1,7 @@
 package com.github.kyungsik.jwtauthentication.module.account;
 
+import static com.github.kyungsik.jwtauthentication.config.SecurityConstants.*;
+
 import javax.validation.Valid;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -8,15 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 import com.github.kyungsik.jwtauthentication.domain.Account;
 import com.github.kyungsik.jwtauthentication.module.account.form.SignUpForm;
-import com.github.kyungsik.jwtauthentication.module.account.validator.SignUpFormValidator;
+import com.github.kyungsik.jwtauthentication.module.account.form.SmsCodeForm;
+import com.github.kyungsik.jwtauthentication.module.common.CommonResponse;
+import com.github.kyungsik.jwtauthentication.module.common.CustomErrorCodes;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,13 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountController {
 
-	private final SignUpFormValidator signUpFormValidator;
 	private final AccountService accountService;
-
-	@InitBinder
-	public void initBinding(WebDataBinder webDataBinder) {
-		webDataBinder.addValidators(signUpFormValidator);
-	}
+	private final JwtTokenProvider jwtTokenProvider;
 
 	@GetMapping("/login")
 	public String login() {
@@ -56,5 +55,32 @@ public class AccountController {
 	public ResponseEntity<Account> myInfo(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
 		Account account = this.accountService.findInfo(id);
 		return new ResponseEntity<>(account, HttpStatus.OK);
+	}
+
+	@GetMapping("/sms/check")
+	public String checkSMSCode() {
+		return "account/check-sms";
+	}
+
+	@PostMapping("/sms/verify")
+	public ResponseEntity<CommonResponse> verifySMSCode(@RequestHeader(HEADER_STRING) String token,
+		SmsCodeForm smsCodeForm) throws
+		ChangeSetPersister.NotFoundException {
+		String username = jwtTokenProvider.getUsername(token.replace(TOKEN_PREFIX, ""));
+		Account account = this.accountService.findByUserName(username);
+
+		CommonResponse.CommonResponseBuilder commonResponse = CommonResponse.builder();
+
+		if (!account.getSmsCode().equals(smsCodeForm.getSmsCode())) {
+			commonResponse.code(CustomErrorCodes.FAIL_SMS_CODE.getCode());
+			commonResponse.message(CustomErrorCodes.FAIL_SMS_CODE.getStatus());
+			return new ResponseEntity<>(commonResponse.build(), HttpStatus.OK);
+		}
+		account.setVerified(true);
+		this.accountService.saveAccount(account);
+
+		commonResponse.code(CustomErrorCodes.OK.getCode());
+		commonResponse.message(CustomErrorCodes.OK.getStatus());
+		return new ResponseEntity<>(commonResponse.build(), HttpStatus.OK);
 	}
 }

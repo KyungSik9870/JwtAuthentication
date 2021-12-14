@@ -49,6 +49,12 @@ public class Account implements UserDetails {
 
 	private String refreshToken;
 
+	private String mobilePhoneNumber;
+
+	private String smsCode;
+
+	private boolean isVerified;
+
 	@Transient
 	private Collection<SimpleGrantedAuthority> authorities;
 

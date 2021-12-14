@@ -10,4 +10,5 @@ import lombok.experimental.SuperBuilder;
 public class LoginResponse extends CommonResponse {
 	private String nickname;
 	private String accessToken;
+	private String nextUrl;
 }

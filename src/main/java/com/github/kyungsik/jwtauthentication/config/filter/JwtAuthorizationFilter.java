@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import com.github.kyungsik.jwtauthentication.config.CookieUtil;
 import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
+import com.github.kyungsik.jwtauthentication.domain.Account;
 import com.github.kyungsik.jwtauthentication.module.account.CustomUserDetailsService;
 import com.github.kyungsik.jwtauthentication.module.account.LoginResponse;
 import com.github.kyungsik.jwtauthentication.module.common.CustomErrorCodes;
@@ -40,11 +41,12 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
+	private final CustomUserDetailsService customUserDetailsService;
 	private final CookieUtil cookieUtil = new CookieUtil();
 
-	public JwtAuthorizationFilter(
-		AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
 		super(authenticationManager);
+		this.customUserDetailsService = customUserDetailsService;
 		this.jwtTokenProvider = new JwtTokenProvider(customUserDetailsService);
 	}
 
@@ -62,6 +64,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		// try-catch phrase for expired token and issue refresh token
 		try {
 			if (jwtTokenProvider.validateToken(header)) {
+				String username = jwtTokenProvider.getUsername(header.replace(TOKEN_PREFIX, ""));
+				Account account = this.customUserDetailsService.loadUserByUsername(username);
+
+				if (!account.isVerified()){
+					throw new RuntimeException("Not Verified Account");
+				}
 				UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}

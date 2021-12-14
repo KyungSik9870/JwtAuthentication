@@ -4,6 +4,7 @@ import static com.github.kyungsik.jwtauthentication.config.SecurityConstants.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -84,8 +85,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.addCookie(refreshTokenCookie);
 
 		// Save Refresh Token
-		Account account = accountRepository.findByLoginId(username).orElseThrow(ChangeSetPersister.NotFoundException::new);
+		String smsCode = getRandomSMSCodeString();
+		log.info("smsCode::"+smsCode);
+		Account account = accountRepository.findByLoginId(username)
+			.orElseThrow(ChangeSetPersister.NotFoundException::new);
 		account.setRefreshToken(refreshToken);
+		account.setSmsCode(smsCode);
+		account.setVerified(false);
 		accountRepository.save(account);
 
 		LoginResponse login = LoginResponse.builder()
@@ -93,6 +99,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			.accessToken(TOKEN_PREFIX + accessToken)
 			.code(CustomErrorCodes.OK.getCode())
 			.message(CustomErrorCodes.OK.getStatus())
+			.nextUrl("/sms/check")
 			.build();
 
 		MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
@@ -101,5 +108,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		if (jsonConverter.canWrite(login.getClass(), jsonMimeType)) {
 			jsonConverter.write(login, jsonMimeType, new ServletServerHttpResponse(response));
 		}
+	}
+
+	private String getRandomSMSCodeString() {
+		Random random = new Random();
+		StringBuilder numStr = new StringBuilder();
+		for (int i = 0; i < 6; i++) {
+			String ranStr = Integer.toString(random.nextInt(10));
+			numStr.append(ranStr);
+		}
+		return numStr.toString();
 	}
 }
