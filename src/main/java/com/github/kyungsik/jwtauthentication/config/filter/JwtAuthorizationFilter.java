@@ -68,7 +68,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				Account account = this.customUserDetailsService.loadUserByUsername(username);
 
 				if (!account.isVerified()){
-					throw new RuntimeException("Not Verified Account");
+					chain.doFilter(request, response);
+					return;
 				}
 				UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
