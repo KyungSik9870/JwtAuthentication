@@ -44,7 +44,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	private final CustomUserDetailsService customUserDetailsService;
 	private final CookieUtil cookieUtil = new CookieUtil();
 
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+		CustomUserDetailsService customUserDetailsService) {
 		super(authenticationManager);
 		this.customUserDetailsService = customUserDetailsService;
 		this.jwtTokenProvider = new JwtTokenProvider(customUserDetailsService);
@@ -67,7 +68,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				String username = jwtTokenProvider.getUsername(header.replace(TOKEN_PREFIX, ""));
 				Account account = this.customUserDetailsService.loadUserByUsername(username);
 
-				if (!account.isVerified()){
+				if (!account.isVerified()) {
 					chain.doFilter(request, response);
 					return;
 				}

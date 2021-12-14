@@ -86,7 +86,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		// Save Refresh Token
 		String smsCode = getRandomSMSCodeString();
-		log.info("smsCode::"+smsCode);
+		log.info("smsCode::" + smsCode);
 		Account account = accountRepository.findByLoginId(username)
 			.orElseThrow(ChangeSetPersister.NotFoundException::new);
 		account.setRefreshToken(refreshToken);

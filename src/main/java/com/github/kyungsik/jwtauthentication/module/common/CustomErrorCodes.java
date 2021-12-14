@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum CustomErrorCodes {
 	OK(200, "OK"),
 	ISSUE_ACCESS_TOKEN_BY_REFRESH_TOKEN(201, "OK"),
-	FAIL_SMS_CODE(403, "FAIL SMS CODE");
+	FAIL_SMS_CODE(403, "Authorization Error - FAIL SMS CODE");
 
 	private final int code;
 	private final String status;

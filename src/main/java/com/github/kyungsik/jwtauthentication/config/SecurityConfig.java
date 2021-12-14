@@ -9,11 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.github.kyungsik.jwtauthentication.module.account.AccountRepository;
-import com.github.kyungsik.jwtauthentication.module.account.CustomUserDetailsService;
 import com.github.kyungsik.jwtauthentication.config.filter.JwtAuthenticationFilter;
 import com.github.kyungsik.jwtauthentication.config.filter.JwtAuthorizationFilter;
 import com.github.kyungsik.jwtauthentication.config.provider.CustomAuthenticationProvider;
+import com.github.kyungsik.jwtauthentication.module.account.AccountRepository;
+import com.github.kyungsik.jwtauthentication.module.account.CustomUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests()
-			.mvcMatchers("/", "/sign-up", "/login","/sms/verify").permitAll()
+			.mvcMatchers("/", "/sign-up", "/login", "/sms/verify").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilter(new JwtAuthenticationFilter(authenticationManager(), accountRepository))

@@ -40,7 +40,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		// 5. 인증된 사용자에 대한 Authentication 객체를 생성해서 리턴한다.
 		// Object principal, Object credentials,
 		// 			Collection<? extends GrantedAuthority> authorities
-		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), authorities);
+		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(),
+			authorities);
 	}
 
 	@Override

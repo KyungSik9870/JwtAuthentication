@@ -12,6 +12,4 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	boolean existsByNickname(String nickname);
 
 	Optional<Account> findByLoginId(String username);
-
-	boolean existsByRefreshToken(String refreshTokenValue);
 }
