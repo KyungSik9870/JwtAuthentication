@@ -1,4 +1,4 @@
-package com.github.kyungsik.jwtauthentication.account;
+package com.github.kyungsik.jwtauthentication.module.account;
 
 import java.util.ArrayList;
 import java.util.Collection;

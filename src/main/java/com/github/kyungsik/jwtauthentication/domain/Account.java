@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +44,10 @@ public class Account implements UserDetails {
 
 	private String password;
 
+	@CreationTimestamp
 	private LocalDateTime joinedAt;
+
+	private String refreshToken;
 
 	@Transient
 	private Collection<SimpleGrantedAuthority> authorities;

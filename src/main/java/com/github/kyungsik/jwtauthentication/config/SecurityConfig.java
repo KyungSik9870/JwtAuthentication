@@ -9,7 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.github.kyungsik.jwtauthentication.account.CustomUserDetailsService;
+import com.github.kyungsik.jwtauthentication.module.account.AccountRepository;
+import com.github.kyungsik.jwtauthentication.module.account.CustomUserDetailsService;
 import com.github.kyungsik.jwtauthentication.config.filter.JwtAuthenticationFilter;
 import com.github.kyungsik.jwtauthentication.config.filter.JwtAuthorizationFilter;
 import com.github.kyungsik.jwtauthentication.config.provider.CustomAuthenticationProvider;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final CustomUserDetailsService userDetailsService;
+	private final AccountRepository accountRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
@@ -30,8 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.mvcMatchers("/", "/sign-up", "/login").permitAll()
 			.anyRequest().authenticated()
 			.and()
-			.addFilter(new JwtAuthenticationFilter(authenticationManager()))
-			.addFilter(new JwtAuthorizationFilter(authenticationManager()))
+			.addFilter(new JwtAuthenticationFilter(authenticationManager(), accountRepository))
+			.addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService))
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 

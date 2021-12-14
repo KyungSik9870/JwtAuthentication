@@ -1,4 +1,4 @@
-package com.github.kyungsik.jwtauthentication.account;
+package com.github.kyungsik.jwtauthentication.module.account;
 
 import java.util.Optional;
 
@@ -12,4 +12,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	boolean existsByNickname(String nickname);
 
 	Optional<Account> findByLoginId(String username);
+
+	boolean existsByRefreshToken(String refreshTokenValue);
 }

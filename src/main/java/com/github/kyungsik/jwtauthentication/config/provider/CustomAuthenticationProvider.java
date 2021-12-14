@@ -2,21 +2,17 @@ package com.github.kyungsik.jwtauthentication.config.provider;
 
 import java.util.List;
 
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.github.kyungsik.jwtauthentication.account.AccountRepository;
-import com.github.kyungsik.jwtauthentication.account.CustomUserDetailsService;
-import com.github.kyungsik.jwtauthentication.config.filter.JwtAuthenticationFilter;
 import com.github.kyungsik.jwtauthentication.domain.Account;
+import com.github.kyungsik.jwtauthentication.module.account.CustomUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

@@ -1,4 +1,4 @@
-package com.github.kyungsik.jwtauthentication.account;
+package com.github.kyungsik.jwtauthentication.module.account;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

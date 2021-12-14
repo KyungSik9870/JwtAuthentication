@@ -1,4 +1,4 @@
-package com.github.kyungsik.jwtauthentication.account;
+package com.github.kyungsik.jwtauthentication.module.account;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;

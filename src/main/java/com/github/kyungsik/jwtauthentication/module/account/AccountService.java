@@ -1,4 +1,4 @@
-package com.github.kyungsik.jwtauthentication.account;
+package com.github.kyungsik.jwtauthentication.module.account;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;

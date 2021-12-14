@@ -7,29 +7,29 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.github.kyungsik.jwtauthentication.account.CustomUserDetailsService;
+import com.github.kyungsik.jwtauthentication.domain.Account;
+import com.github.kyungsik.jwtauthentication.module.account.CustomUserDetailsService;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
 
-	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
+	@Resource(name = "customUserDetailsService")
+	private final CustomUserDetailsService customUserDetailsService;
 
 	public String generateAccessToken(String username) {
 		return generateToken(username, ACCESS_TOKEN_EXPIRE);
@@ -37,6 +37,19 @@ public class JwtTokenProvider {
 
 	public String generateRefreshToken(String username) {
 		return generateToken(username, REFRESH_TOKEN_EXPIRE);
+	}
+
+	public boolean validateToken(String header) throws Exception {
+		String tokenValue = header.replace(TOKEN_PREFIX, "");
+		Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY)).parseClaimsJws(tokenValue);
+		return true;
+	}
+
+	public boolean validateRefreshToken(String refreshTokenValue) throws Exception {
+		String username = getUsername(refreshTokenValue);
+		System.out.println(username);
+		Account account = this.customUserDetailsService.loadUserByUsername(username);
+		return account.getRefreshToken().equals(refreshTokenValue) && validateToken(refreshTokenValue);
 	}
 
 	private String generateToken(String username, Long expireTime) {
@@ -48,6 +61,11 @@ public class JwtTokenProvider {
 			.signWith(SignatureAlgorithm.HS512, createSigningKey());
 
 		return jwtBuilder.compact();
+	}
+
+	public String getUsername(String token) {
+		Claims claims = getClaimsFromToken(token);
+		return claims.get("username").toString();
 	}
 
 	private Map<String, Object> createHeader() {
@@ -83,25 +101,5 @@ public class JwtTokenProvider {
 			.setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
 			.parseClaimsJws(accessTokenValue)
 			.getBody();
-	}
-
-	public boolean validateToken(String header) {
-		String tokenValue = header.replace(TOKEN_PREFIX, "");
-		try {
-			Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY)).parseClaimsJws(tokenValue);
-			return true;
-		} catch (SignatureException exception) {
-			log.error("JWT signature does not match");
-			return false;
-		} catch (ExpiredJwtException exception) {
-			log.error("Token Expired");
-			return false;
-		} catch (JwtException exception) {
-			log.error("Token Tampered");
-			return false;
-		} catch (NullPointerException exception) {
-			log.error("Token is null");
-			return false;
-		}
 	}
 }
