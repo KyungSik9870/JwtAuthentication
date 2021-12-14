@@ -1,8 +1,11 @@
-package com.github.kyungsik.jwtauthentication.module.account;
+package com.github.kyungsik.jwtauthentication.module.account.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import com.github.kyungsik.jwtauthentication.module.account.AccountRepository;
+import com.github.kyungsik.jwtauthentication.module.account.form.SignUpForm;
 
 import lombok.RequiredArgsConstructor;
 

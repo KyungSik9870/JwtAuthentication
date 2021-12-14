@@ -59,7 +59,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		}
 
 		String refreshTokenValue = null;
-		// TODO add try-catch phrase for expired token and issue refresh token
+		// try-catch phrase for expired token and issue refresh token
 		try {
 			if (jwtTokenProvider.validateToken(header)) {
 				UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
@@ -81,7 +81,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		}
 
 		if (refreshTokenValue != null) {
-			// TODO check Refresh Token & issue Access Token
+			// check Refresh Token & issue Access Token
 			try {
 				if (jwtTokenProvider.validateRefreshToken(refreshTokenValue)) {
 					String username = jwtTokenProvider.getUsername(refreshTokenValue);

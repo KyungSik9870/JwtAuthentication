@@ -1,4 +1,4 @@
-package com.github.kyungsik.jwtauthentication.module.account;
+package com.github.kyungsik.jwtauthentication.module.account.form;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

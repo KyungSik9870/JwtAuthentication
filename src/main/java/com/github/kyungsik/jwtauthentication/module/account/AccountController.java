@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.github.kyungsik.jwtauthentication.domain.Account;
+import com.github.kyungsik.jwtauthentication.module.account.form.SignUpForm;
+import com.github.kyungsik.jwtauthentication.module.account.validator.SignUpFormValidator;
 
 import lombok.RequiredArgsConstructor;
 

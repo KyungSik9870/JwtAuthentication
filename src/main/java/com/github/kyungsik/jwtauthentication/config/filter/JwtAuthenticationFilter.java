@@ -79,11 +79,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String accessToken = jwtTokenProvider.generateAccessToken(username);
 		String refreshToken = jwtTokenProvider.generateRefreshToken(username);
 
-		// TODO Issue Refresh Token
+		// Issue Refresh Token
 		Cookie refreshTokenCookie = cookieUtil.create("refreshToken", refreshToken);
 		response.addCookie(refreshTokenCookie);
 
-		// TODO Save Refresh Token
+		// Save Refresh Token
 		Account account = accountRepository.findByLoginId(username).orElseThrow(ChangeSetPersister.NotFoundException::new);
 		account.setRefreshToken(refreshToken);
 		accountRepository.save(account);

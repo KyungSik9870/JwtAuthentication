@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.kyungsik.jwtauthentication.domain.Account;
 import com.github.kyungsik.jwtauthentication.domain.Role;
+import com.github.kyungsik.jwtauthentication.module.account.form.SignUpForm;
 
 import lombok.RequiredArgsConstructor;
 
