@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -138,6 +139,16 @@ class AccountControllerTest {
 		String response = result.getResponse().getContentAsString();
 		JSONObject jsonObject = new JSONObject(response);
 		String accessToken = jsonObject.getString("accessToken");
+
+		Account account = this.accountRepository.findByLoginId(username).orElseThrow(
+			ChangeSetPersister.NotFoundException::new);
+
+		mockMvc.perform(
+			post("/sms/verify")
+				.param("smsCode", account.getSmsCode())
+				.header("Authorization", accessToken)
+		)
+			.andExpect(status().isOk());
 
 		mockMvc.perform(
 			get("/account/1")
