@@ -41,13 +41,14 @@ public class JwtTokenProvider {
 
 	public boolean validateToken(String header) throws Exception {
 		String tokenValue = header.replace(TOKEN_PREFIX, "");
-		Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY)).parseClaimsJws(tokenValue);
+		Jwts.parser()
+			.setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+			.parseClaimsJws(tokenValue);
 		return true;
 	}
 
 	public boolean validateRefreshToken(String refreshTokenValue) throws Exception {
 		String username = getUsername(refreshTokenValue);
-		System.out.println(username);
 		Account account = this.customUserDetailsService.loadUserByUsername(username);
 		return account.getRefreshToken().equals(refreshTokenValue) && validateToken(refreshTokenValue);
 	}

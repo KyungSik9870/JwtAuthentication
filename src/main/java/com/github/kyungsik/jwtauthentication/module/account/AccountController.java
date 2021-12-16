@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.github.kyungsik.jwtauthentication.config.provider.JwtTokenProvider;
 import com.github.kyungsik.jwtauthentication.domain.Account;
 import com.github.kyungsik.jwtauthentication.module.account.form.SignUpForm;
-import com.github.kyungsik.jwtauthentication.module.account.form.SmsCodeForm;
 import com.github.kyungsik.jwtauthentication.module.account.validator.SignUpFormValidator;
 import com.github.kyungsik.jwtauthentication.module.common.CommonResponse;
 import com.github.kyungsik.jwtauthentication.module.common.CustomErrorCodes;
@@ -78,7 +77,7 @@ public class AccountController {
 		String username = jwtTokenProvider.getUsername(token.replace(TOKEN_PREFIX, ""));
 		Account account = this.accountService.findByUserName(username);
 
-		CommonResponse.CommonResponseBuilder commonResponse = CommonResponse.builder();
+		CommonResponse.CommonResponseBuilder<?, ?> commonResponse = CommonResponse.builder();
 
 		if (!account.getSmsCode().equals(smsCode)) {
 			commonResponse.code(CustomErrorCodes.FAIL_SMS_CODE.getCode());
