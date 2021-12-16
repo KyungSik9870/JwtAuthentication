@@ -151,7 +151,7 @@ class AccountControllerTest {
 			.andExpect(status().isOk());
 
 		mockMvc.perform(
-			get("/account/1")
+			get("/account/" + account.getId())
 				.header("Authorization", accessToken)
 		).andExpect(status().isOk());
 	}
