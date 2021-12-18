@@ -99,7 +99,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			.accessToken(TOKEN_PREFIX + accessToken)
 			.code(CustomErrorCodes.OK.getCode())
 			.message(CustomErrorCodes.OK.getStatus())
-			.nextUrl("/sms/check")
 			.build();
 
 		MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
