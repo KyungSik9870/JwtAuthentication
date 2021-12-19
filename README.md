@@ -1,7 +1,7 @@
 # JWT + 2 Factor(sms 인증)
 
 JWT 를 사용하며 2 Factor (sms 인증) 을 하는 방법에 대해서 생각하며 프로젝트를 간단히 만들었습니다.  
-업무 중, 보안 관련하여 2 Factor 인증과 동시접속을 제한해달라는 지시를 받았는데,  
+업무 중, 보안ㅇ 관련하여 2 Factor 인증과 동시접속을 제한해달라는 지시를 받았는데,  
 이 두 문제를 같이 고려하였습니다.
 
 ## ✹ JWT (Json Web Token) 사용
@@ -27,6 +27,17 @@ JWT 를 사용하며 2 Factor (sms 인증) 을 하는 방법에 대해서 생각
 > 여러대의 PC 에서 접속을 해서는 안된다.
 
 ## 📋 구현기능 목록
+
+###순서
+- 사용자가 id/pw 로 인증요청을 보낸다.
+- AuthenticationFilter 에서 확인한다. (provider 구현하였음)
+- 인증이 성공하면 sms 코드를 발급해준다. 이때 DB에 코드 인증여부는 false 로 저장.
+- (사용자가 발급받은 sms 코드를 입력하는 화면은 security 에서 permitAll 처리해줌)
+- 사용자가 입력한 sms 코드가 DB 값과 일치하면 인증여부를 true 로 업데이트.
+- Authorization Filter 에서는 인증여부가 false 면 인가하지 않고, 체이닝을 통과하게 하고,  
+  true 면 인가해줌.
+- Access Token 이 만료됐다면, Cookie 에서 refresh 토큰을 찾아 유효성을 검사하고,  
+  Access Token 을 재발급해준다. 
 
 1. JWT 구현
     - JWT 를 구현하기 위해 Authentication Filter 커스텀
