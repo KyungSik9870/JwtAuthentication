@@ -85,7 +85,7 @@ class AccountControllerTest {
 
 	@DisplayName("회원가입 - 입력값 정상")
 	@ParameterizedTest
-	@CsvSource(value = {"alphabet:nickname:12345678"}, delimiter = ':')
+	@CsvSource({"alphabet, nickname, 12345678"})
 	void signUpForm_with_right_param(String loginId, String nickname, String password) throws Exception {
 		mockMvc.perform(
 			post("/sign-up")
@@ -101,11 +101,9 @@ class AccountControllerTest {
 	}
 
 	@DisplayName("로그인 성공 테스트")
-	@Test
-	public void login_success() throws Exception {
-		String username = "kyungsik";
-		String password = "12345678";
-
+	@ParameterizedTest
+	@CsvSource({"kyungsik, 12345678"})
+	public void login_success(String username, String password) throws Exception {
 		MvcResult result = login(username, password);
 
 		String response = result.getResponse().getContentAsString();
@@ -115,11 +113,9 @@ class AccountControllerTest {
 	}
 
 	@DisplayName("로그인 성공 후 내정보 조회 테스트")
-	@Test
-	void name() throws Exception {
-		String username = "kyungsik";
-		String password = "12345678";
-
+	@ParameterizedTest
+	@CsvSource({"kyungsik, 12345678"})
+	void get_myInfo_after_login(String username, String password) throws Exception {
 		MvcResult result = login(username, password);
 
 		String response = result.getResponse().getContentAsString();
