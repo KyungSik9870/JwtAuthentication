@@ -106,18 +106,11 @@ class AccountControllerTest {
 		String username = "kyungsik";
 		String password = "12345678";
 
-		MvcResult result = mockMvc.perform(
-			post("/account/login")
-				.param("loginId", username)
-				.param("password", password)
-		)
-			.andExpect(status().isOk())
-			.andExpect(cookie().exists("refreshToken"))
-			.andReturn();
+		MvcResult result = login(username, password);
 
 		String response = result.getResponse().getContentAsString();
 		JSONObject jsonObject = new JSONObject(response);
-		System.out.println(jsonObject);
+
 		assertThat(jsonObject.getString("accessToken")).isNotBlank();
 	}
 
@@ -127,14 +120,7 @@ class AccountControllerTest {
 		String username = "kyungsik";
 		String password = "12345678";
 
-		MvcResult result = mockMvc.perform(
-			post("/account/login")
-				.param("loginId", username)
-				.param("password", password)
-		)
-			.andExpect(status().isOk())
-			.andExpect(cookie().exists("refreshToken"))
-			.andReturn();
+		MvcResult result = login(username, password);
 
 		String response = result.getResponse().getContentAsString();
 		JSONObject jsonObject = new JSONObject(response);
@@ -154,5 +140,16 @@ class AccountControllerTest {
 			get("/account/" + account.getId())
 				.header("Authorization", accessToken)
 		).andExpect(status().isOk());
+	}
+
+	private MvcResult login(String username, String password) throws Exception {
+		return mockMvc.perform(
+			post("/account/login")
+				.param("loginId", username)
+				.param("password", password)
+		)
+			.andExpect(status().isOk())
+			.andExpect(cookie().exists("refreshToken"))
+			.andReturn();
 	}
 }
