@@ -12,6 +12,7 @@ public class CookieUtil {
 	public Cookie create(String cookieName, String value) {
 		Cookie cookie = new Cookie(cookieName, value);
 		cookie.setHttpOnly(true);
+		cookie.setSecure(true);
 		cookie.setMaxAge(Math.toIntExact(ACCESS_TOKEN_EXPIRE));
 		cookie.setPath("/");
 
